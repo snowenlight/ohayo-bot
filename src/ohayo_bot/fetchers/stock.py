@@ -12,6 +12,6 @@ class StockFetcher(BaseFetcher):
             info = yf.Ticker(symbol).fast_info
             results[symbol] = {
                 "price": info.last_price,
-                "currency": info.currency,
+                "previous_close": info.previous_close,
             }
         return results

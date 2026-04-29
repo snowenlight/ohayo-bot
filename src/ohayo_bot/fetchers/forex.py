@@ -10,5 +10,8 @@ class ForexFetcher(BaseFetcher):
         results = {}
         for pair in self.pairs:
             info = yf.Ticker(pair).fast_info
-            results[pair] = {"rate": info.last_price}
+            results[pair] = {
+                "rate": info.last_price,
+                "previous_close": info.previous_close,
+            }
         return results
