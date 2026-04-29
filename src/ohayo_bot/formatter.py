@@ -16,12 +16,10 @@ def format_message(stocks: dict, forex: dict, weather: dict | None = None, weath
         lines.append("【天気】")
         lines.append("取得失敗")
 
-    lines.append("\n【為替】")
+    lines.append("\n【マーケット】")
     for pair, data in forex.items():
         name = pair.replace("=X", "")
         lines.append(f"{name}: {data['rate']:.2f}")
-
-    lines.append("\n【株価】")
     for symbol, data in stocks.items():
         lines.append(f"{symbol}: {data['price']:.2f} {data['currency']}")
 
