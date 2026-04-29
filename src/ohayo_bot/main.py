@@ -15,14 +15,16 @@ from .formatter import format_message
 from .notifiers.line import LineNotifier
 
 
-def run() -> None:
+def build_message() -> str:
     stocks = StockFetcher(STOCK_SYMBOLS).fetch()
     forex = ForexFetcher(FOREX_PAIRS).fetch()
     rates = StockFetcher(RATE_SYMBOLS).fetch()
+
     try:
         mta = MTAFetcher().fetch()
     except Exception:
         mta = {"disruptions": [], "error": True}
+
     weather = None
     weather_error = False
     if OPENWEATHER_API_KEY:
@@ -31,8 +33,11 @@ def run() -> None:
         except Exception:
             weather_error = True
 
-    message = format_message(stocks, forex, rates, mta, weather, weather_error=weather_error)
+    return format_message(stocks, forex, rates, mta, weather, weather_error=weather_error)
 
+
+def run() -> None:
+    message = build_message()
     LineNotifier(LINE_CHANNEL_ACCESS_TOKEN, LINE_USER_ID).send(message)
 
 
