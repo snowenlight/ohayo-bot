@@ -13,7 +13,7 @@ def _change_bp(current: float, previous: float) -> str:
     return f"({sign}{bp:.0f} bp)"
 
 
-def format_message(stocks: dict, forex: dict, rates: dict, weather: dict | None = None, weather_error: bool = False) -> str:
+def format_message(stocks: dict, forex: dict, rates: dict, mta: dict | None, weather: dict | None = None, weather_error: bool = False) -> str:
     today = date.today().strftime("%Y年%-m月%-d日")
     lines = [f"おはようございます！ {today}の朝の情報です。\n"]
 
@@ -36,5 +36,15 @@ def format_message(stocks: dict, forex: dict, rates: dict, weather: dict | None 
         lines.append(f"{symbol}: {data['price']:.2f} {_change(data['price'], data['previous_close'])}")
     for symbol, data in rates.items():
         lines.append(f"{symbol}: {data['price']:.2f}% {_change_bp(data['price'], data['previous_close'])}")
+
+    if mta is not None:
+        lines.append("\n【MTA地下鉄】")
+        if mta.get("error"):
+            lines.append("取得失敗")
+        elif mta["disruptions"]:
+            for d in mta["disruptions"]:
+                lines.append(f"{d['line']}: {d['status']}")
+        else:
+            lines.append("正常運行")
 
     return "\n".join(lines)
