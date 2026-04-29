@@ -1,0 +1,11 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+LINE_CHANNEL_ACCESS_TOKEN: str = os.environ["LINE_CHANNEL_ACCESS_TOKEN"]
+LINE_USER_ID: str = os.environ["LINE_USER_ID"]
+OPENWEATHER_API_KEY: str = os.environ["OPENWEATHER_API_KEY"]
+WEATHER_CITY: str = os.getenv("WEATHER_CITY", "Tokyo")
+STOCK_SYMBOLS: list[str] = os.getenv("STOCK_SYMBOLS", "7203.T,^GSPC").split(",")
+FOREX_PAIRS: list[str] = os.getenv("FOREX_PAIRS", "USDJPY=X,EURJPY=X").split(",")

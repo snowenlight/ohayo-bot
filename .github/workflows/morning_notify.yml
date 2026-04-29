@@ -1,0 +1,30 @@
+name: Morning Notify
+
+on:
+  schedule:
+    # 平日7:00 JST = UTC日-木 22:00
+    - cron: '0 22 * * 0-4'
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Run bot
+        env:
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
+          WEATHER_CITY: ${{ secrets.WEATHER_CITY }}
+          STOCK_SYMBOLS: ${{ secrets.STOCK_SYMBOLS }}
+          FOREX_PAIRS: ${{ secrets.FOREX_PAIRS }}
+        run: python -m ohayo_bot.main
