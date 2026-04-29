@@ -16,7 +16,7 @@ from .notifiers.line import LineNotifier
 def run() -> None:
     stocks = StockFetcher(STOCK_SYMBOLS).fetch()
     forex = ForexFetcher(FOREX_PAIRS).fetch()
-    weather = WeatherFetcher(OPENWEATHER_API_KEY, WEATHER_CITY).fetch()
+    weather = WeatherFetcher(OPENWEATHER_API_KEY, WEATHER_CITY).fetch() if OPENWEATHER_API_KEY else None
 
     message = format_message(stocks, forex, weather)
 

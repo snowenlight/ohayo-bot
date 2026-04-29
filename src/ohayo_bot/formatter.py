@@ -1,16 +1,17 @@
 from datetime import date
 
 
-def format_message(stocks: dict, forex: dict, weather: dict) -> str:
+def format_message(stocks: dict, forex: dict, weather: dict | None = None) -> str:
     today = date.today().strftime("%Y年%-m月%-d日")
     lines = [f"おはようございます！ {today}の朝の情報です。\n"]
 
-    lines.append("【天気】")
-    lines.append(
-        f"{weather['city']}: {weather['description']} "
-        f"{weather['temp']:.1f}°C"
-        f"（最低{weather['temp_min']:.1f} / 最高{weather['temp_max']:.1f}）"
-    )
+    if weather:
+        lines.append("【天気】")
+        lines.append(
+            f"{weather['city']}: {weather['description']} "
+            f"{weather['temp']:.1f}°C"
+            f"（最低{weather['temp_min']:.1f} / 最高{weather['temp_max']:.1f}）"
+        )
 
     lines.append("\n【為替】")
     for pair, data in forex.items():
