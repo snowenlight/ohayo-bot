@@ -2,26 +2,12 @@ name: Morning Notify
 
 on:
   schedule:
-    # 平日7:00 AM New York時間（EDT/ESTのDST切り替えに対応）
-    - cron: '0 11 * * 1-5'  # EDT (UTC-4): 3月〜11月
-    - cron: '0 12 * * 1-5'  # EST (UTC-5): 11月〜3月
+    # 平日7:00 EST (UTC-5) / 6:00 EDT (UTC-4)
+    - cron: '0 11 * * 1-5'
   workflow_dispatch:
 
 jobs:
-  check-time:
-    runs-on: ubuntu-latest
-    outputs:
-      should_run: ${{ steps.check.outputs.should_run }}
-    steps:
-      - id: check
-        run: |
-          NY_HOUR=$(TZ="America/New_York" date +%H)
-          echo "New York time: ${NY_HOUR}:00"
-          echo "should_run=$([ "$NY_HOUR" = "07" ] && echo true || echo false)" >> $GITHUB_OUTPUT
-
   notify:
-    needs: check-time
-    if: needs.check-time.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
