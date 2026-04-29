@@ -20,9 +20,9 @@ def format_message(stocks: dict, forex: dict, rates: dict, weather: dict | None 
     if weather:
         lines.append("【天気】")
         lines.append(
-            f"{weather['city']}: {weather['description']} "
-            f"{weather['temp']:.1f}°C"
+            f"{weather['description']} {weather['temp']:.1f}°C"
             f"（最低{weather['temp_min']:.1f} / 最高{weather['temp_max']:.1f}）"
+            f" 降水確率{weather['pop'] * 100:.0f}%"
         )
     elif weather_error:
         lines.append("【天気】")

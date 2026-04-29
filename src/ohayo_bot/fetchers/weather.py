@@ -1,7 +1,7 @@
 import requests
 from .base import BaseFetcher
 
-_BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
+_BASE_URL = "https://api.openweathermap.org/data/2.5/forecast"
 
 
 class WeatherFetcher(BaseFetcher):
@@ -17,15 +17,17 @@ class WeatherFetcher(BaseFetcher):
                 "appid": self.api_key,
                 "units": "metric",
                 "lang": "ja",
+                "cnt": 8,  # 直近24時間（3時間×8）
             },
             timeout=10,
         )
         resp.raise_for_status()
         data = resp.json()
+        entries = data["list"]
         return {
-            "city": self.city,
-            "description": data["weather"][0]["description"],
-            "temp": data["main"]["temp"],
-            "temp_min": data["main"]["temp_min"],
-            "temp_max": data["main"]["temp_max"],
+            "description": entries[0]["weather"][0]["description"],
+            "temp": entries[0]["main"]["temp"],
+            "temp_min": min(e["main"]["temp_min"] for e in entries),
+            "temp_max": max(e["main"]["temp_max"] for e in entries),
+            "pop": max(e.get("pop", 0) for e in entries),
         }
