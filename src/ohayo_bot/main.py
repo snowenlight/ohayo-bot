@@ -4,6 +4,7 @@ from .config import (
     LINE_USER_ID,
     OPENWEATHER_API_KEY,
     RATE_SYMBOLS,
+    SLACK_WEBHOOK_URL,
     STOCK_SYMBOLS,
     WEATHER_CITY,
 )
@@ -13,6 +14,7 @@ from .fetchers.stock import StockFetcher
 from .fetchers.weather import WeatherFetcher
 from .formatter import format_message
 from .notifiers.line import LineNotifier
+from .notifiers.slack import SlackNotifier
 
 
 def build_message() -> str:
@@ -39,6 +41,8 @@ def build_message() -> str:
 def run() -> None:
     message = build_message()
     LineNotifier(LINE_CHANNEL_ACCESS_TOKEN, LINE_USER_ID).send(message)
+    if SLACK_WEBHOOK_URL:
+        SlackNotifier(SLACK_WEBHOOK_URL).send(message)
 
 
 if __name__ == "__main__":
