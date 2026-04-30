@@ -1,7 +1,6 @@
 from .config import (
     FOREX_PAIRS,
     LINE_CHANNEL_ACCESS_TOKEN,
-    LINE_USER_ID,
     OPENWEATHER_API_KEY,
     RATE_SYMBOLS,
     SLACK_WEBHOOK_URL,
@@ -40,7 +39,7 @@ def build_message() -> str:
 
 def run() -> None:
     message = build_message()
-    LineNotifier(LINE_CHANNEL_ACCESS_TOKEN, LINE_USER_ID).send(message)
+    LineNotifier(LINE_CHANNEL_ACCESS_TOKEN).send(message)
     if SLACK_WEBHOOK_URL:
         SlackNotifier(SLACK_WEBHOOK_URL).send(message)
 
