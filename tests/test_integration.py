@@ -6,6 +6,7 @@ import pytest
 from ohayo_bot.main import build_message
 
 
+@pytest.mark.integration
 def test_build_message():
     message = build_message()
 

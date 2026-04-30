@@ -22,3 +22,7 @@ dev = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ohayo_bot"]
+
+[tool.pytest.ini_options]
+addopts = "-m 'not integration'"
+markers = ["integration: 実際のAPIを使う統合テスト（手動実行用）"]

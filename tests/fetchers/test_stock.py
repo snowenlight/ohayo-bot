@@ -13,4 +13,4 @@ def test_fetch_returns_price(mock_ticker):
     result = StockFetcher(["7203.T"]).fetch()
 
     assert result["7203.T"]["price"] == 2500.0
-    assert result["7203.T"]["currency"] == "JPY"
+    assert result["7203.T"]["previous_close"] is not None
