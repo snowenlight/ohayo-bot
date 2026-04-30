@@ -27,4 +27,5 @@ jobs:
           WEATHER_CITY: ${{ secrets.WEATHER_CITY }}
           STOCK_SYMBOLS: ${{ secrets.STOCK_SYMBOLS }}
           FOREX_PAIRS: ${{ secrets.FOREX_PAIRS }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: python -m ohayo_bot.main
