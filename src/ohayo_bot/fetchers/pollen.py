@@ -1,43 +1,53 @@
 import requests
 from .base import BaseFetcher
 
-_BASE_URL = "https://api.tomorrow.io/v4/weather/forecast"
+_BASE_URL = "https://pollen.googleapis.com/v1/forecast:lookup"
 
-# Tomorrow.io 花粉指数 (0-5) のラベル
-_LEVELS = ["なし", "極低", "低", "中", "高", "極高"]
-
-
-def _label(value: int | float | None) -> str:
-    if value is None:
-        return "不明"
-    idx = max(0, min(5, int(round(value))))
-    return _LEVELS[idx]
+_CATEGORY_JA = {
+    "None": "なし",
+    "Very Low": "極低",
+    "Low": "低",
+    "Moderate": "中",
+    "High": "高",
+    "Very High": "極高",
+}
 
 
 class PollenFetcher(BaseFetcher):
     def __init__(self, api_key: str, location: str):
         self.api_key = api_key
-        self.location = location
+        lat, lon = location.split(",")
+        self.lat = float(lat)
+        self.lon = float(lon)
 
     def fetch(self) -> dict:
         resp = requests.get(
             _BASE_URL,
             params={
-                "location": self.location,
-                "fields": "treeIndex,grassIndex,weedIndex",
-                "timesteps": "1h",
-                "apikey": self.api_key,
+                "key": self.api_key,
+                "location.latitude": self.lat,
+                "location.longitude": self.lon,
+                "days": 1,
             },
             timeout=10,
         )
         resp.raise_for_status()
         data = resp.json()
-        values = data["timelines"]["hourly"][0]["values"]
+        types = data["dailyInfo"][0].get("pollenTypeInfo", [])
+        by_code = {t["code"]: t for t in types}
+
         return {
-            "tree": values.get("treeIndex"),
-            "grass": values.get("grassIndex"),
-            "weed": values.get("weedIndex"),
-            "tree_label": _label(values.get("treeIndex")),
-            "grass_label": _label(values.get("grassIndex")),
-            "weed_label": _label(values.get("weedIndex")),
+            "tree": _entry(by_code.get("TREE")),
+            "grass": _entry(by_code.get("GRASS")),
+            "weed": _entry(by_code.get("WEED")),
         }
+
+
+def _entry(info: dict | None) -> dict:
+    if not info or "indexInfo" not in info:
+        return {"value": None, "label": "データなし"}
+    idx = info["indexInfo"]
+    return {
+        "value": idx.get("value"),
+        "label": _CATEGORY_JA.get(idx.get("category", ""), idx.get("category", "不明")),
+    }

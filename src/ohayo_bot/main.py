@@ -3,7 +3,7 @@ from .config import (
     OPENWEATHER_API_KEY,
     POLLEN_LOCATION,
     SLACK_WEBHOOK_URL,
-    TOMORROW_API_KEY,
+    GOOGLE_POLLEN_API_KEY,
     WEATHER_CITY,
 )
 from .fetchers.mta import MTAFetcher
@@ -30,9 +30,9 @@ def build_message() -> str:
 
     pollen = None
     pollen_error = False
-    if TOMORROW_API_KEY:
+    if GOOGLE_POLLEN_API_KEY:
         try:
-            pollen = PollenFetcher(TOMORROW_API_KEY, POLLEN_LOCATION).fetch()
+            pollen = PollenFetcher(GOOGLE_POLLEN_API_KEY, POLLEN_LOCATION).fetch()
         except Exception:
             pollen_error = True
 

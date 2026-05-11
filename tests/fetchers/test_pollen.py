@@ -6,30 +6,38 @@ from ohayo_bot.fetchers.pollen import PollenFetcher
 @patch("ohayo_bot.fetchers.pollen.requests.get")
 def test_fetch_returns_pollen(mock_get):
     mock_get.return_value.json.return_value = {
-        "timelines": {
-            "hourly": [
-                {"values": {"treeIndex": 3, "grassIndex": 1, "weedIndex": 0}},
-            ]
-        }
+        "dailyInfo": [
+            {
+                "pollenTypeInfo": [
+                    {
+                        "code": "TREE",
+                        "indexInfo": {"value": 1, "category": "Very Low"},
+                    },
+                    {
+                        "code": "GRASS",
+                        "indexInfo": {"value": 3, "category": "Moderate"},
+                    },
+                    {"code": "WEED"},
+                ]
+            }
+        ]
     }
 
-    result = PollenFetcher("fake_key", "40.7,-74.0").fetch()
+    result = PollenFetcher("fake_key", "40.7128,-74.0060").fetch()
 
-    assert result["tree"] == 3
-    assert result["grass"] == 1
-    assert result["weed"] == 0
-    assert result["tree_label"] == "中"
-    assert result["grass_label"] == "極低"
-    assert result["weed_label"] == "なし"
+    assert result["tree"] == {"value": 1, "label": "極低"}
+    assert result["grass"] == {"value": 3, "label": "中"}
+    assert result["weed"] == {"value": None, "label": "データなし"}
 
 
 @patch("ohayo_bot.fetchers.pollen.requests.get")
-def test_fetch_handles_missing_values(mock_get):
+def test_fetch_handles_missing_type(mock_get):
     mock_get.return_value.json.return_value = {
-        "timelines": {"hourly": [{"values": {}}]}
+        "dailyInfo": [{"pollenTypeInfo": []}]
     }
 
-    result = PollenFetcher("fake_key", "40.7,-74.0").fetch()
+    result = PollenFetcher("fake_key", "40.7128,-74.0060").fetch()
 
-    assert result["tree"] is None
-    assert result["tree_label"] == "不明"
+    assert result["tree"]["label"] == "データなし"
+    assert result["grass"]["label"] == "データなし"
+    assert result["weed"]["label"] == "データなし"

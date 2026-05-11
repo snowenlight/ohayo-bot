@@ -24,9 +24,9 @@ def format_message(
 
     if pollen:
         lines.append("\n【花粉】")
-        lines.append(f"木: {pollen['tree_label']}")
-        lines.append(f"草: {pollen['grass_label']}")
-        lines.append(f"雑草: {pollen['weed_label']}")
+        lines.append(f"木: {pollen['tree']['label']}")
+        lines.append(f"草: {pollen['grass']['label']}")
+        lines.append(f"雑草: {pollen['weed']['label']}")
     elif pollen_error:
         lines.append("\n【花粉】")
         lines.append("取得失敗")
