@@ -2,8 +2,8 @@ name: Morning Notify
 
 on:
   schedule:
-    # 平日7:00 EST (UTC-5) / 5:30 EDT (UTC-4)、遅延を考慮して早めに実行
-    - cron: '0 10 * * 1-5'
+    # 毎日7:00 EST (UTC-5) / 5:30 EDT (UTC-4)、遅延を考慮して早めに実行
+    - cron: '0 10 * * *'
   workflow_dispatch:
 
 jobs:
