@@ -15,5 +15,4 @@ def test_build_message():
     print("---------------------")
 
     assert "おはようございます" in message
-    assert "【マーケット】" in message
     assert "【MTA地下鉄】" in message

@@ -1,15 +1,13 @@
 from .config import (
-    FOREX_PAIRS,
     LINE_CHANNEL_ACCESS_TOKEN,
     OPENWEATHER_API_KEY,
-    RATE_SYMBOLS,
+    POLLEN_LOCATION,
     SLACK_WEBHOOK_URL,
-    STOCK_SYMBOLS,
+    TOMORROW_API_KEY,
     WEATHER_CITY,
 )
-from .fetchers.forex import ForexFetcher
 from .fetchers.mta import MTAFetcher
-from .fetchers.stock import StockFetcher
+from .fetchers.pollen import PollenFetcher
 from .fetchers.weather import WeatherFetcher
 from .formatter import format_message
 from .notifiers.line import LineNotifier
@@ -17,10 +15,6 @@ from .notifiers.slack import SlackNotifier
 
 
 def build_message() -> str:
-    stocks = StockFetcher(STOCK_SYMBOLS).fetch()
-    forex = ForexFetcher(FOREX_PAIRS).fetch()
-    rates = StockFetcher(RATE_SYMBOLS).fetch()
-
     try:
         mta = MTAFetcher().fetch()
     except Exception:
@@ -34,7 +28,21 @@ def build_message() -> str:
         except Exception:
             weather_error = True
 
-    return format_message(stocks, forex, rates, mta, weather, weather_error=weather_error)
+    pollen = None
+    pollen_error = False
+    if TOMORROW_API_KEY:
+        try:
+            pollen = PollenFetcher(TOMORROW_API_KEY, POLLEN_LOCATION).fetch()
+        except Exception:
+            pollen_error = True
+
+    return format_message(
+        mta,
+        weather,
+        weather_error=weather_error,
+        pollen=pollen,
+        pollen_error=pollen_error,
+    )
 
 
 def run() -> None:

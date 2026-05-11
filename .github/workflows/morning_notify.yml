@@ -25,7 +25,7 @@ jobs:
           LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
           WEATHER_CITY: ${{ secrets.WEATHER_CITY }}
-          STOCK_SYMBOLS: ${{ secrets.STOCK_SYMBOLS }}
-          FOREX_PAIRS: ${{ secrets.FOREX_PAIRS }}
+          TOMORROW_API_KEY: ${{ secrets.TOMORROW_API_KEY }}
+          POLLEN_LOCATION: ${{ secrets.POLLEN_LOCATION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: python -m ohayo_bot.main
