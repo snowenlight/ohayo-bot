@@ -1,3 +1,4 @@
+import os
 import sys
 
 from .config import (
@@ -50,6 +51,9 @@ def build_message() -> str:
 
 def run() -> None:
     message = build_message()
+    if os.getenv("DRY_RUN", "").lower() == "true":
+        print(message)
+        return
     LineNotifier(LINE_CHANNEL_ACCESS_TOKEN).send(message)
     if SLACK_WEBHOOK_URL:
         SlackNotifier(SLACK_WEBHOOK_URL).send(message)

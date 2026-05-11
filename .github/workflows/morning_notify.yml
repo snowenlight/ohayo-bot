@@ -5,6 +5,11 @@ on:
     # 毎日7:00 EST (UTC-5) / 5:30 EDT (UTC-4)、遅延を考慮して早めに実行
     - cron: '0 10 * * *'
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'メッセージを生成するだけで送信しない'
+        type: boolean
+        default: false
 
 jobs:
   notify:
@@ -28,4 +33,5 @@ jobs:
           GOOGLE_POLLEN_API_KEY: ${{ secrets.GOOGLE_POLLEN_API_KEY }}
           POLLEN_LOCATION: ${{ secrets.POLLEN_LOCATION }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: python -m ohayo_bot.main
