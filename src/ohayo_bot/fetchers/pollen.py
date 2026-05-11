@@ -31,7 +31,8 @@ class PollenFetcher(BaseFetcher):
             },
             timeout=10,
         )
-        resp.raise_for_status()
+        if not resp.ok:
+            raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:300]}")
         data = resp.json()
         types = data["dailyInfo"][0].get("pollenTypeInfo", [])
         by_code = {t["code"]: t for t in types}

@@ -1,3 +1,5 @@
+import sys
+
 from .config import (
     LINE_CHANNEL_ACCESS_TOKEN,
     OPENWEATHER_API_KEY,
@@ -33,7 +35,8 @@ def build_message() -> str:
     if GOOGLE_POLLEN_API_KEY:
         try:
             pollen = PollenFetcher(GOOGLE_POLLEN_API_KEY, POLLEN_LOCATION).fetch()
-        except Exception:
+        except Exception as e:
+            print(f"pollen fetch failed: {type(e).__name__}: {e}", file=sys.stderr)
             pollen_error = True
 
     return format_message(
